@@ -1,0 +1,223 @@
+\documentclass{article}
+
+
+\usepackage{arxiv}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+
+\title{SIMULACION DE UNA RULETA}
+
+
+\author{
+ Pecoraro Lucio \\
+  Universidad Tecnológica Nacional - FRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Legajo 50239 \\
+  \texttt{luciopecoraro2002@gmail.com} \\
+  %% examples of more authors
+   \And
+ Berto Leandro \\
+  Universidad Tecnológica Nacional - FRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Legajo 45368 \\
+  \texttt{leandroberto2010@gmail.com} \\
+  \And
+ Capiglioni Rodrigo \\
+  Universidad Tecnológica Nacional - FRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Legajo 47298 \\
+  \texttt{RodrigoCapiglioni@gmail.com} \\
+  \And
+  Broda Tomás \\
+  Universidad Tecnológica Nacional - FRRO\\
+  Zeballos 1341, S2000, Argentina\\
+  Legajo 47299 \\
+  \texttt{tomasbroda13@gmail.com} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+El siguiente documento tiene como objetivo el analisis de los datos obtenidos luego de realizar varias simulaciones de un juego de ruleta.
+\end{abstract}
+
+
+% keywords can be removed
+%\keywords{First keyword \and Second keyword \and More}
+
+
+\section{Introduccion}
+En el juego de azar de la ruleta, una bola se arroja sobre una rueda giratoria que contiene números del 0 al 36, lo que resulta en un total de 37 posibles resultados. Cada número tiene una probabilidad igual de ser el resultado de una tirada, es decir, 1 entre 37, lo que equivale aproximadamente al 2.7 \% de probabilidad. Nuestra tarea implica llevar a cabo una simulación de varias tiradas consecutivas de una ruleta ficticia, con el objetivo de realizar un análisis estadístico de los resultados obtenidos.
+
+Mediante esta simulación, podemos observar cómo se distribuyen los resultados a lo largo del tiempo. Esto nos permitirá comprender mejor la naturaleza aleatoria del juego y proporcionar información útil para aquellos interesados en entender el comportamiento de la ruleta en términos estadísticos. Podremos obtener información valiosa sobre la frecuencia con la que aparecen diferentes números, así como la variabilidad en los resultados a lo largo de las diferentes tiradas. Esto nos ayudará a tener una mejor comprensión de las características del juego de la ruleta y de cómo se comporta en condiciones de probabilidad aleatoria.
+
+
+\section{Descripcion del trabajo}
+\label{sec:headings}
+Utilizamos Python, un lenguaje de programación versátil y potente, para simular el funcionamiento de una ruleta. Este proyecto  fue consolidado con diversas bibliotecas de Python las cuales proporcionaron distintas herramientas necesarias para llevar a cabo la simulación de manera eficiente.
+El diseño del sistema utilizo distintos parámetros de entrada a través de la consola, como el número de tiradas (XXX), el número de corridas (YY) y el número elegido (ZZ). Estos parámetros permiten generar una serie de resultados aleatorios que simulan las tiradas de una ruleta.
+Cada resultado se registra en estructuras de datos, principalmente listas, que son ampliamente utilizadas en Python debido a su flexibilidad y eficiencia. Posteriormente, estas listas se utilizan para realizar cálculos estadísticos y representar los datos en diversos gráficos.
+La naturaleza estadística del análisis requiere el uso de distintas fórmulas matemáticas específicas, que se aplican para interpretar los resultados de la simulación y obtener conclusiones significativas sobre el comportamiento de la ruleta.
+
+La metodología estadística es clave en nuestro análisis, 
+permitiéndonos calcular las distintas medidas.  
+
+La media y la mediana son medidas de tendencia central. La media es el promedio de un conjunto de datos, mientras que la mediana es el valor que divide el conjunto de datos en dos partes iguales cuando están ordenados de menor a mayor (o de mayor a menor).
+
+La varianza y su raíz cuadrada, la desviación estándar, son medidas de dispersión. La varianza mide qué tan dispersos están los valores respecto a la media. Una varianza alta indica que los valores están más dispersos alrededor de la media, mientras que una varianza baja indica que los valores están más concentrados alrededor de la media.
+
+Además, se realizó la optimización del código y se realizaron pruebas exhaustivas para validar la precisión de la simulación.
+La visualización de datos es una parte integral de nuestro proyecto,
+utilizamos herramientas avanzadas para crear gráficos de 
+dispersión que ilustraron los resultados de manera clara 
+y comprensible. Cabe destacar que las bibliotecas nos proporcionaron una interfaz de usuario, intuitiva con una
+retroalimentación visual inmediata sobre cada tirada 
+de la ruleta.
+
+\subsection{Bibliotecas utilizadas}
+\paragraph{Random}
+Se utilizo la biblioteca "Random" para poder generar valores aleatorios, lo cual equivale a una "tirada" de la ruleta.
+\paragraph{Numpy}
+La biblioteca "Numpy" provee las herramientas necesarias para calcular valores estadísticos a partir de los resultados, siendo estos la varianza, desviación estándar, promedio y frecuencia relativa de un valor elegido.
+\paragraph{MatPlotLib}
+Para poder graficar y comparar los datos obtenidos de forma conveniente utilizamos "matplotlib" 
+
+\section{Formulas empleadas}
+\subsection{Varianza muestral}
+La varianza muestral es una medida estadística que describe la dispersión o variabilidad de un conjunto de datos. Mide qué tan dispersos están los datos alrededor de su media muestral \cite{Estadisticas}
+\begin{equation}
+s^2 = \frac{\sum_{i=1}^{n}(x_i - \bar{x})^2}{n-1}
+\end{equation}
+Donde:
+\begin{itemize}
+    \item \(s^2\) es la varianza muestral
+    \item \(x_i\) son los valores de la muestra
+    \item \(\bar{x}\) es la media aritmética de la muestra
+    \item \(n\) es el tamaño de la muestra
+\end{itemize}
+
+\subsection{Desvio muestral}
+El desvío muestral, o desviación estandar es la variación o dispersión en la que los puntos de los datos individuales difieren de la media. Se define como la raíz de la varianza muestral \cite{Estadisticas}
+\begin{equation}
+s = \sqrt{s^2}
+\end{equation}
+Donde:
+\begin{itemize}
+    \item \(s\) es el desvío muestral
+    \item \(s^2\) es la varianza muestral 
+\end{itemize}
+
+\subsection{Frecuencia relativa}
+La frecuencia relativa es el porcentaje de veces que se repite un dato con respecto a la totalidad de los datos
+
+\begin{equation}
+f_i = \frac{n_i}{N}
+\end{equation}
+Donde:
+\begin{itemize}
+    \item \(f_i\) es la frecuencia relativa
+    \item \(n_i\) es el numero de veces que ocurre el valor
+    \item \(N\) es el tamaño total del conjunto de datos
+\end{itemize}
+
+\subsection{Promedio muestral}
+El promedio muestral o media muestral representa el valor promedio del conjunto de datos
+\begin{equation}
+\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}
+\end{equation}
+Donde:
+\begin{itemize}
+    \item \(\bar{x}\) es el promedio muestral
+    \item \(x_i\) son los valores individuales de la muestra
+    \item \(n\) es el tamaño de la muestra
+\end{itemize}
+
+%Insertar formulas de varianza, etc
+
+\section{Resultados}
+
+\subsection{Corrida única}
+Las siguientes graficas corresponden a los resultados obtenidos de una única corrida, con 1000 tiradas.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1\linewidth]{Grafico 1 tirada.png}
+    \end{figure}
+
+Como se puede ver en el gráfico, a medida que se realiza una mayor cantidad de tiradas, los valores se van estabilizando en los esperados, delineados con una linea roja. En este caso específico, se calcula la frecuencia relativa con respecto al número 2, el cual fue el resultado de la primer tirada realizada.
+    
+\subsection{Comparacion de corridas}
+Se realizaron 5 corridas independientes de 1000 tiradas, y comparamos los resultados obtenidos de cada una superponiéndolos en un gráfico para ver sus tendencias.
+
+    \begin{center}
+        \includegraphics[width=1\linewidth]{Grafico 5 corridas.png}
+        \label{Grafico 5}
+    \end{center}
+
+
+Si bien en las primeras tiradas los gráficos parecen caóticos, cuan mayor sea la cantidad de tiradas realizadas, todas las líneas que representan una corrida independiente tienden a estabilizarse en una misma recta
+
+
+\section{Conclusion}
+En este proyecto a través de la simulación de lanzamientos de una ruleta, se pudo comprobar el Teorema Central del Límite. Aunque los resultados individuales de cada tirada de ruleta presentan una distribución uniforme (ya que cada número tiene la misma probabilidad de salir), al tomar muestras de varias tiradas y calcular sus promedios, observamos que la distribución de esos promedios tiende a una forma aproximadamente normal.
+
+Este comportamiento se hizo más evidente a medida que aumentamos el tamaño de las muestras y la cantidad de repeticiones. De esta manera, la simulación permitió validar que, independientemente de la distribución original de los datos, los promedios muestrales tienden a distribuirse normalmente cuando el tamaño de muestra es suficientemente grande. El experimento realizado demuestra en la práctica la importancia del Teorema Central del Límite como base para aplicar técnicas estadísticas sobre datos que, en principio, no siguen una distribución normal.
+
+Por último, este trabajo no solo sirve como una herramienta educativa para enseñar conceptos de probabilidad, sino que también tiene aplicaciones prácticas en el análisis de juegos de azar. A través de este proceso, hemos adquirido habilidades valiosas en programación y análisis de datos que serán aplicables en futuros proyectos.
+
+\section{Codigo del programa}
+El código del programa realizado se encuentra publicado en:
+\begin{center}
+  \url{https://github.com/pecorarolucio/tps-simulacion-2025/tree/main/TP1}
+\end{center}
+
+
+ 
+%\bibliography{references}  %%% Remove comment to use the external .bib file (using bibtex).
+%%% and comment out the ``thebibliography'' section.
+
+
+%%% Comment out this section when you \bibliography{references} is enabled.
+\begin{thebibliography}{1}
+
+\bibitem{Estadisticas}
+Ronald E. Walpole, Raymond H. Myers, Sharon L. Myers y Keying ye.
+\newblock {\em Probabilidad y estadística para ingeniería y ciencias} pag 15-16.
+\end{thebibliography}
+ %\section*{Referencias}
+
+%{\url{https://www.questionpro.com/blog/es/desviacion-estandar/}}
+
+{\url{https://python-para-impacientes.blogspot.com/2014/08/graficos-en-ipython.html}}
+ 
+%{\url{https://es.wikipedia.org/wiki/Varianza}}
+    
+{\url{https://relopezbriega.github.io/blog/2015/06/27/probabilidad-y-estadistica-con-python/}}
+
+\end{document}
