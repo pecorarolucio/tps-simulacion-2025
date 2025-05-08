@@ -45,7 +45,7 @@ print(f"Valor p asociado: {p_valor:.6f}")
 trios = [(valores[i], valores[i+1], valores[i+2]) for i in range(n - 2)]
 x_vals, y_vals, z_vals = zip(*trios)
 
-# Crear gráfico 3D
+# gráfico 3D
 fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(x_vals, y_vals, z_vals, s=1, alpha=0.5)
@@ -58,13 +58,13 @@ plt.tight_layout()
 plt.show()
 
 #test de chi cuadrado
-# Elegimos cantidad de intervalos
+#cantidad de intervalos
 k = 10
 
-# Contamos ocurrencias en cada intervalo
+#Contamos ocurrencias en cada intervalo
 frecuencias_obs, _ = np.histogram(valores, bins=k, range=(0, 1))
 
-# Frecuencia esperada si fuera perfectamente uniforme
+#Frecuencia esperada si fuera perfectamente uniforme
 frecuencia_esp = [n / k] * k
 
 # Test de chi-cuadrado
@@ -72,3 +72,22 @@ chi2, p_valor = chisquare(frecuencias_obs, f_exp=frecuencia_esp)
 
 print(f"Chi-cuadrado (n=100.000): {chi2:.4f}")
 print(f"Valor p: {p_valor:.6f}")
+
+
+# Test de corridas
+def contar_corridas(valores):
+    r = 1  # siempre hay al menos una corrida
+    for i in range(1, len(valores) - 1):
+        if (valores[i] > valores[i - 1] and valores[i] > valores[i + 1]) or \
+           (valores[i] < valores[i - 1] and valores[i] < valores[i + 1]):
+            r += 1
+    return r
+
+r = contar_corridas(valores)
+mu = (2 * n - 1) / 3
+sigma2 = (16 * n - 29) / 90
+z = (r - mu) / np.sqrt(sigma2)
+
+print(f"Cantidad de corridas observadas: {r}")
+print(f"Esperado (media): {mu:.2f}")
+print(f"Z = {z:.4f}")
