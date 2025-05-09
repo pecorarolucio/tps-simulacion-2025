@@ -43,11 +43,12 @@ Comportamiento altamente satisfactorio, uniforme y sin correlaciones notables. E
 | Prueba | Generador Congruencial Lineal (GCL) | random.random() (Python) |
 |--------|-------------------------------------|---------------------------|
 | **Histograma (Visual)** | ✅ Muy bueno | ✅ Muy bueno |
-| **Coef. Pearson** | -0.002641 | 0.001605 |
+| **Coef. Pearson** | 0.002425 | -0.000963 |
 | **Valor p Pearson** | 0.403674 | 0.611695 |
 | **Chi-cuadrado** | 8.9522 | 12.5154 |
 | **Valor p Chi-cuadrado** | 0.441698 | 0.185787 |
 | **Z Test de Corridas** | 0.5675 | 0.5600 |
+| **Test de Poker** | 0.4002 | 0.7814 |
 
 ### 📌 Conclusión de la comparativa:
 Ambos generadores mostraron resultados excelentes y muy similares. La leve diferencia numérica observada no tiene implicaciones prácticas relevantes y ambos son estadísticamente confiables para simulaciones generales. Esto valida nuestra implementación casera (GCL) como comparable en calidad al estándar de Python.
@@ -56,6 +57,6 @@ Ambos generadores mostraron resultados excelentes y muy similares. La leve difer
 
 ## Pendiente:
 
-- hacer mas pruebas (Test de Poker, Test de Series, Test Kolmogorov-Smirnov).
+- hacer mas pruebas (Test de Series, Test Kolmogorov-Smirnov).
 - Comparar por lo menos con un tercer generador. Podriamos hacerlo con un generador que falle para mostrar uno no eficiente
 - Documentar sensibilidad ante cambios de parámetros.
