@@ -35,14 +35,26 @@
 - Para n = 100.000 → p = 0.44 (resultado **aceptable y esperado**).
 - **Conclusión:** El GCL genera valores con distribución uniforme estadísticamente válida en muestras grandes.
 
+### 5. Test de corridas (sobre y bajo la media)
+Para GLC: 
+- Z = -0.93, p=0.34. (**aceptable y esperado**)
+- La cantidad de corridas coincide con las esperadas
+- **Conclusion** El GLC supera el test de corridas y se considera aleatorio en ese sentido.
+
+Para random:
+- Z = 0.16, p=0.86 (**aceptable y esperado**)
+- La cantidad de corridas coincide con las esperadas
+- **Conclusion** La generacion de valores aleatorios de random supera el test de corridas y se considera aleatorio en ese sentido
+
 ---
 
 ## 📌 Próximos pasos
 
 - Aplicar **otros tests estadísticos** clásicos:
-  - Corridas
+  - ~~Corridas~~
   - Poker
   - Series
 - Comparar contra `random.random()` de Python y otros generadores clásicos como **RANDU**.
 - Registrar resultados y visualizaciones para el informe.
+- Realizar conclusiones de test de poker y series
 
