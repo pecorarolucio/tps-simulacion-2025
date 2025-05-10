@@ -2,7 +2,7 @@ import random
 from scipy.stats import chi2
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import pearsonr, chisquare
+from scipy.stats import pearsonr, chisquare, norm
 
 random.seed(42)
 n = 100000
@@ -58,7 +58,48 @@ chi2, p_chi = chisquare(frecuencias_obs, f_exp=frecuencia_esp)
 print(f"Chi-cuadrado (n=100000): {chi2:.4f}")
 print(f"Valor p: {p_chi:.6f}")"""
 
-# 5. Test de corridas
+#Test de corridas por encima y debajo de la media
+def calculo_corridas(valores):
+    lista_transformada = []
+    media = np.mean(valores)
+    for i in valores:  #genero lista de 0 si el valor es menor a la media o 1 si es mayor
+        if (i < media): lista_transformada.append(0)
+        elif (i>media): lista_transformada.append(1)
+
+    #contar corridas
+    corridas = 1
+    for i in range(1, len(lista_transformada)):
+        if (lista_transformada[i] !=lista_transformada[i-1]):
+            corridas += 1
+
+    #cuento cantidad de valores mayores y menores
+    mayores = lista_transformada.count(1)
+    menores = lista_transformada.count(0) 
+
+    #Calculo de valor esperado y varianza
+    media_corridas = (2*mayores*menores) / (mayores + menores) + 1
+
+    #La formula de varianza proviene de: https://influentialpoints.com/Training/runs_tests-principles-properties-assumptions.htm#:~:text=To%20assess%20whether%20a%20given,and%20below%20the%20median%20test.
+    #Y tambien de gpt. Es distinta porque es sobre numeros binarios
+    varianza_corridas = (2*mayores*menores*(2*mayores*menores-mayores-menores))/\
+                        (((mayores+menores)**2)*(mayores+menores-1)) #capaz nombrarlo mayores y menores no fue la mejor idea
+    
+    #Calculo de Z
+    z_corridas = (corridas-media_corridas) / np.sqrt(varianza_corridas)
+    p_value = 2 * (1 - norm.cdf(abs(z_corridas))) #no tengo idea, es el valor p que sirve para algo
+
+    print("\nTest de corridas")
+    print(f"Cantidad de corridas: {corridas}")
+    print(f"Corridas esperadas: {media_corridas}")
+    print(f"Valor de Z: {z_corridas}")
+    print(F"Valor de p: {p_value}")
+
+    if (abs(z_corridas)<=1.95) and (p_value > 0.05):
+        print("✅ No se rechaza H0: aleatorio (α = 0.05)")
+    else:
+        print("❌ Rechazamos H0: NO aleatorio (α = 0.05)")
+
+# 5. Test de series
 def contar_corridas(valores):
     r = 1
     for i in range(1, len(valores) - 1):
@@ -134,3 +175,4 @@ def poker_test(numeros, nombre=""):
     return conteo_obs
 
 conteo_rand = poker_test(valores, "random.random()")
+calculo_corridas(valores)
