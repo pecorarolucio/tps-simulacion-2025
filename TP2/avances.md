@@ -46,14 +46,21 @@ Para random:
 - La cantidad de corridas coincide con las esperadas
 - **Conclusion** La generacion de valores aleatorios de random supera el test de corridas y se considera aleatorio en ese sentido
 
+### 6. Test de rachas
+Para GLC:
+- Z = -0.9356846037139235, p = 0.3494356000091451 (**aceptable y esperado**)
+Para random:
+- Z = 0.16468427607455347, p = 0.8691924938627993 (**aceptable y esperado**)
+**Conclusion** Ambos generadores producen resultados que parecen ser aleatorios, según la prueba de rachas.
+
 ---
 
 ## 📌 Próximos pasos
 
 - Aplicar **otros tests estadísticos** clásicos:
   - ~~Corridas~~
-  - Poker
-  - Series
+  - ~~Poker~~
+  - ~~Series~~
 - Comparar contra `random.random()` de Python y otros generadores clásicos como **RANDU**.
 - Registrar resultados y visualizaciones para el informe.
 - Realizar conclusiones de test de poker y series

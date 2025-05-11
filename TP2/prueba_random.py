@@ -3,6 +3,7 @@ from scipy.stats import chi2
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr, chisquare, norm
+import statsmodels.api as sm
 
 random.seed(42)
 n = 100000
@@ -174,5 +175,17 @@ def poker_test(numeros, nombre=""):
 
     return conteo_obs
 
+#Test de rachas
+def racha_test(data):
+    runs_result = sm.stats.runstest_1samp(data, correction=True)
+    # Interpretación del valor p
+    if runs_result[1] < 0.05:
+        print("El test concluye que los datos NO son completamente aleatorios.")
+    else:
+        print("El test concluye que los datos parecen ser aleatorios.")
+        print(f"Valor de Z: {runs_result[0]}")
+        print(f"Valor de p: {runs_result[1]}")
+
 conteo_rand = poker_test(valores, "random.random()")
 calculo_corridas(valores)
+racha_test(valores)

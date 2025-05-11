@@ -5,6 +5,8 @@ import numpy as np
 from scipy.stats import chisquare
 from scipy.stats import chi2
 from scipy.stats import norm
+import statsmodels.api as sm
+
 
 
 
@@ -201,6 +203,20 @@ def poker_test(numeros, nombre=""):
 
     return conteo_obs
 
-conteo_glc = poker_test(valores, "GLC")
+#Test de rachas
+def racha_test(data):
+    runs_result = sm.stats.runstest_1samp(data, correction=True)
+    # Interpretación del valor p
+    if runs_result[1] < 0.05:
+        print("El test concluye que los datos NO son completamente aleatorios.")
+    else:
+        print("El test concluye que los datos parecen ser aleatorios.")
+    print(f"Valor de Z: {runs_result[0]}")
+    print(f"Valor de p: {runs_result[1]}")
+
+
+poker_test(valores, "GLC")
 
 calculo_corridas(valores)
+
+racha_test(valores)
