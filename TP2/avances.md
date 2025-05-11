@@ -31,14 +31,15 @@
 
 ### 4. Test de Frecuencia (Chi-cuadrado)
 - Se dividió el intervalo [0,1) en 10 subintervalos.
-Para GLC (n=1000000):
+Para GLC (n=100000):
 Los resultados del test de chi-cuadrado indican que no hay una diferencia significativa entre las frecuencias observadas y las esperadas. Dado que el valor p es alto 0.8753, no se rechaza la hipótesis nula, lo que sugiere que los datos siguen una distribución uniforme y no presentan patrones anómalos
 
-Para random(n=1000000):
+Para random(n=100000):
 Los resultados del test de chi-cuadrado muestran que la diferencia entre las frecuencias observadas y esperadas no es estadísticamente significativa. Con un valor p de 0.5249, mayor que 0.05, no se rechaza la hipótesis nula, lo que indica que los datos pueden considerarse aleatorios y seguir una distribución uniforme sin evidencia de patrones estructurados
 
-- **Conclusión:** Ambos generadores superan el test y se considera aleatorio.
-
+Para RANDU(n=100000):
+Los resultados del test de chi-cuadrado indican que no hay evidencia estadística suficiente para rechazar la hipótesis de que los datos generados por RANDU siguen una distribución uniforme (p = 0.235309). Sin embargo, este test por sí solo no garantiza que los valores sean realmente aleatorios, ya que solo evalúa la distribución de frecuencias.
+Dado que RANDU es un generador conocido por su fuerte correlación interna, los gráficos de dispersión y 3D revelan su mayor debilidad: los valores no están distribuidos de manera uniforme, sino que forman patrones estructurados, lo que confirma que RANDU no es adecuado para simulaciones aleatorias confiables.
 
 
 ### 5. Test de corridas (sobre y bajo la media)
