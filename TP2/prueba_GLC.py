@@ -82,6 +82,28 @@ chi2, p_valor = chisquare(frecuencias_obs, f_exp=frecuencia_esp)
 print(f"Chi-cuadrado (n=100.000): {chi2:.4f}")
 print(f"Valor p: {p_valor:.6f}")"""
 
+def test_chi_cuadrado(valores, k=10):
+    """
+    Realiza el test de chi-cuadrado para verificar si una distribución es uniforme.
+    
+    :param valores: Lista o array de valores a analizar.
+    :param k: Cantidad de intervalos (por defecto 10).
+    :return: Tupla con los resultados (chi-cuadrado, valor p).
+    """
+    # Contamos ocurrencias en cada intervalo
+    frecuencias_obs, _ = np.histogram(valores, bins=k, range=(0, 1))
+
+    # Frecuencia esperada si la distribución fuera perfectamente uniforme
+    frecuencia_esp = [len(valores) / k] * k
+
+    # Calculamos el test de chi-cuadrado
+    chi2, p_valor = chisquare(frecuencias_obs, f_exp=frecuencia_esp)
+
+    # Mostramos los resultados
+    print(f"Chi-cuadrado (n={len(valores)}): {chi2:.4f}")
+    print(f"Valor p: {p_valor:.6f}")
+
+    return chi2, p_valor
 
 #Test de corridas por encima y debajo de la media
 def calculo_corridas(valores):
@@ -203,20 +225,9 @@ def poker_test(numeros, nombre=""):
 
     return conteo_obs
 
-#Test de rachas
-def racha_test(data):
-    runs_result = sm.stats.runstest_1samp(data, correction=True)
-    # Interpretación del valor p
-    if runs_result[1] < 0.05:
-        print("El test concluye que los datos NO son completamente aleatorios.")
-    else:
-        print("El test concluye que los datos parecen ser aleatorios.")
-    print(f"Valor de Z: {runs_result[0]}")
-    print(f"Valor de p: {runs_result[1]}")
-
 
 poker_test(valores, "GLC")
 
 calculo_corridas(valores)
 
-racha_test(valores)
+test_chi_cuadrado(valores)

@@ -31,9 +31,15 @@
 
 ### 4. Test de Frecuencia (Chi-cuadrado)
 - Se dividió el intervalo [0,1) en 10 subintervalos.
-- Para n = 10.000 → p = 0.032 (ligeramente sospechoso).
-- Para n = 100.000 → p = 0.44 (resultado **aceptable y esperado**).
-- **Conclusión:** El GCL genera valores con distribución uniforme estadísticamente válida en muestras grandes.
+Para GLC (n=1000000):
+Los resultados del test de chi-cuadrado indican que no hay una diferencia significativa entre las frecuencias observadas y las esperadas. Dado que el valor p es alto 0.8753, no se rechaza la hipótesis nula, lo que sugiere que los datos siguen una distribución uniforme y no presentan patrones anómalos
+
+Para random(n=1000000):
+Los resultados del test de chi-cuadrado muestran que la diferencia entre las frecuencias observadas y esperadas no es estadísticamente significativa. Con un valor p de 0.5249, mayor que 0.05, no se rechaza la hipótesis nula, lo que indica que los datos pueden considerarse aleatorios y seguir una distribución uniforme sin evidencia de patrones estructurados
+
+- **Conclusión:** Ambos generadores superan el test y se considera aleatorio.
+
+
 
 ### 5. Test de corridas (sobre y bajo la media)
 Para GLC: 
@@ -46,14 +52,6 @@ Para random:
 - La cantidad de corridas coincide con las esperadas
 - **Conclusion** La generacion de valores aleatorios de random supera el test de corridas y se considera aleatorio en ese sentido
 
-### 6. Test de rachas
-Para GLC:
-- Z = -0.9356846037139235, p = 0.3494356000091451 (**aceptable y esperado**)
-Para random:
-- Z = 0.16468427607455347, p = 0.8691924938627993 (**aceptable y esperado**)
-**Conclusion** Ambos generadores producen resultados que parecen ser aleatorios, según la prueba de rachas.
-
----
 
 ## 📌 Próximos pasos
 
