@@ -6,81 +6,119 @@ from scipy.stats import chisquare
 from scipy.stats import chi2
 from scipy.stats import norm
 import statsmodels.api as sm
+import random
 
-"""def xorshift32(seed, n=10):
-    x = seed & 0xFFFFFFFF  # Aseguramos 32 bits
-    results = []
+n=100000
+seed=42
+valores=[]
 
+#eleccion de generador
+def inicio():
+    valores=eleccion_generador()
+    calculo_corridas(valores)
+    contar_corridas(valores)
+    poker_test(valores)
+    test_chi_cuadrado(valores)
+    graficar(valores)
+
+
+def eleccion_generador():
+    i=0
+    while i not in [1, 2, 3, 4]:
+        i = int(input("Seleccionar generador:\n1. GLC\n2. random\n3. RANDU\n4. XORShift32\n"))
+    if i==1: valores=generar_gcl(n, seed)
+    if i==2: valores=generar_random(n, seed)
+    if i==3: valores=generar_randu(n, seed)
+    if i==4: valores=generar_xor(n, seed)
+    return valores
+
+
+# GCL 
+def generar_gcl(n, semilla=42, a=1664525, c=1013904223, m=2**32):
+    x = semilla
+    numeros = []
     for _ in range(n):
-        x ^= (x << 13) & 0xFFFFFFFF
-        x ^= (x >> 17)
-        x ^= (x << 5) & 0xFFFFFFFF
-        x = x & 0xFFFFFFFF  # Asegura que se mantenga en 32 bits
-        results.append(x / 0xFFFFFFFF)  # Normaliza a [0, 1]
+        x = (a * x + c) % m
+        numeros.append(x / m)
+    return numeros
 
-    return results"""
+#random
+def generar_random(n, seed):
+    random.seed=seed
+    valores= [random.random() for _ in range(n)]
+    return valores
 
-def xorshift32(seed, n=10000):
+#RANDU
+def generar_randu(n, seed):
+    a = 65539
+    m = 2**31
+    x = seed
+    valores = []
+    for _ in range(n):
+        x = (a * x) % m
+        valores.append(x / m)  # Normalizar a [0, 1)
+    return valores
+
+#XORSHIFT32
+def generar_xor(n, seed):
     """Bibliografia: https://www.maxgcoding.com/xorshiftpnrg"""
     x = seed & 0xFFFFFFFF
-    results = []
+    valores = []
     for _ in range(n):
         x ^= (x << 13) & 0xFFFFFFFF
         x ^= (x >> 17)
         x ^= (x << 5) & 0xFFFFFFFF
         x = x & 0xFFFFFFFF
-        results.append(x / 0xFFFFFFFF)
-    return results
+        valores.append(x / 0xFFFFFFFF)
+    return valores
 
-# Generar valores
-seed = 123456789
-n=100000
-numeros = xorshift32(seed, n)
-
-# Armar los pares (U_n, U_{n+1})
-pares = [(numeros[i], numeros[i+1]) for i in range(n - 1)]
-x_vals, y_vals = zip(*pares)
-
-# Calcular el coeficiente de correlación de Pearson
-corr, p_valor = pearsonr(x_vals, y_vals)
-
-print(f"Coeficiente de correlación (Pearson): {corr:.6f}")
-print(f"Valor p asociado: {p_valor:.6f}")
+def graficar(valores):
+    # Histograma
+    plt.hist(valores, bins=50, edgecolor='black')
+    plt.title("Histograma")
+    plt.xlabel("Valor")
+    plt.ylabel("Frecuencia")
+    plt.grid(True)
+    plt.show()
 
 
-# Armar las tríadas (U_n, U_{n+1}, U_{n+2})
-trios = [(numeros[i], numeros[i+1], numeros[i+2]) for i in range(n - 2)]
-x_vals, y_vals, z_vals = zip(*trios)
+    # Armar los pares (U_n, U_{n+1})
+    pares = [(valores[i], valores[i+1]) for i in range(n - 1)]
+    x_vals, y_vals = zip(*pares)
 
-# Histograma
-plt.hist(numeros, bins=50, edgecolor='black')
-plt.title("Histograma XORShift32")
-plt.xlabel("Valor")
-plt.ylabel("Frecuencia")
-plt.grid(True)
-plt.show()
+    # Gráfico de dispersión
+    plt.figure(figsize=(6, 6))
+    plt.scatter(x_vals, y_vals, s=1, alpha=0.5)
+    plt.title("Gráfico de dispersión: (U_n, U_{n+1})")
+    plt.xlabel("U_n")
+    plt.ylabel("U_{n+1}")
+    plt.grid(True)
+    plt.show()
 
 
-# Gráfico dispersión 2D
-plt.figure(figsize=(6, 6))
-plt.scatter(x_vals, y_vals, s=1, alpha=0.5)
-plt.title("Gráfico dispersión XORShift32")
-plt.xlabel("U_n")
-plt.ylabel("U_n+1")
-plt.grid(True)
-plt.show()
+    # Calcular el coeficiente de correlación de Pearson
+    corr, p_valor = pearsonr(x_vals, y_vals)
 
-# Gráfico 3D
-fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(x_vals, y_vals, z_vals, s=1, alpha=0.5)
+    print(f"Coeficiente de correlación (Pearson): {corr:.6f}")
+    print(f"Valor p asociado: {p_valor:.6f}")
 
-ax.set_title("Gráfico 3D: (U_n, U_{n+1}, U_{n+2}) - XORShift32")
-ax.set_xlabel("U_n")
-ax.set_ylabel("U_{n+1}")
-ax.set_zlabel("U_{n+2}")
-plt.tight_layout()
-plt.show()
+
+    # Armar las tríadas (U_n, U_{n+1}, U_{n+2})
+    trios = [(valores[i], valores[i+1], valores[i+2]) for i in range(n - 2)]
+    x_vals, y_vals, z_vals = zip(*trios)
+
+    # gráfico 3D
+    fig = plt.figure(figsize=(8, 6))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x_vals, y_vals, z_vals, s=1, alpha=0.5)
+
+    ax.set_title("Gráfico 3D: (U_n, U_{n+1}, U_{n+2})")
+    ax.set_xlabel("U_n")
+    ax.set_ylabel("U_{n+1}")
+    ax.set_zlabel("U_{n+2}")
+    plt.tight_layout()
+    plt.show()
+
 
 def test_chi_cuadrado(valores, k=10):
     """
@@ -90,6 +128,7 @@ def test_chi_cuadrado(valores, k=10):
     :param k: Cantidad de intervalos (por defecto 10).
     :return: Tupla con los resultados (chi-cuadrado, valor p).
     """
+    #test de chi cuadrado
     # Contamos ocurrencias en cada intervalo
     frecuencias_obs, _ = np.histogram(valores, bins=k, range=(0, 1))
 
@@ -154,16 +193,14 @@ def contar_corridas(valores):
         if (valores[i] > valores[i - 1] and valores[i] > valores[i + 1]) or \
            (valores[i] < valores[i - 1] and valores[i] < valores[i + 1]):
             r += 1
-    return r
+    
+    mu = (2 * n - 1) / 3
+    sigma2 = (16 * n - 29) / 90
+    z = (r - mu) / np.sqrt(sigma2)
 
-r = contar_corridas(numeros)
-mu = (2 * n - 1) / 3
-sigma2 = (16 * n - 29) / 90
-z = (r - mu) / np.sqrt(sigma2)
-
-print(f"Cantidad de corridas observadas: {r}")
-print(f"Esperado (media): {mu:.2f}")
-print(f"Z = {z:.4f}")
+    print(f"Cantidad de corridas observadas: {r}")
+    print(f"Esperado (media): {mu:.2f}")
+    print(f"Z = {z:.4f}")
 
 #Test de poker
 """Bibliografía: https://idoc.pub/documents/idocpub-6klz2po2qvlg"""
@@ -223,9 +260,4 @@ def poker_test(numeros, nombre=""):
     return conteo_obs
 
 
-
-poker_test(numeros, "XORShift32")
-
-calculo_corridas(numeros)
-
-test_chi_cuadrado(numeros)
+inicio()
