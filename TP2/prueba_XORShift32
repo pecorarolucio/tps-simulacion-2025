@@ -20,7 +20,7 @@ import statsmodels.api as sm
 
     return results"""
 
-def xorshift32(seed, n=10000):
+def xorshift32(seed, n):
     """Bibliografia: https://www.maxgcoding.com/xorshiftpnrg"""
     x = seed & 0xFFFFFFFF
     results = []
@@ -33,7 +33,7 @@ def xorshift32(seed, n=10000):
     return np.array(results)
 
 # Generar valores
-seed = 123456789
+seed = 42
 n=100000
 numeros = xorshift32(seed, n)
 
