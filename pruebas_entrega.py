@@ -198,6 +198,7 @@ def contar_corridas(valores):
     sigma2 = (16 * n - 29) / 90
     z = (r - mu) / np.sqrt(sigma2)
 
+    print("\nTest de series")
     print(f"Cantidad de corridas observadas: {r}")
     print(f"Esperado (media): {mu:.2f}")
     print(f"Z = {z:.4f}")
