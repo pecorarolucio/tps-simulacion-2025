@@ -7,47 +7,39 @@ from scipy.stats import chi2
 from scipy.stats import norm
 import statsmodels.api as sm
 
+"""def xorshift32(seed, n=10):
+    x = seed & 0xFFFFFFFF  # Aseguramos 32 bits
+    results = []
 
-# Parámetros del GCL
-a = 1664525
-c = 1013904223
-m = 2**32
-semilla = 4343
-n = 100000
-
-# GCL 
-def generar_gcl(n, semilla=42, a=1664525, c=1013904223, m=2**32):
-    x = semilla
-    numeros = []
     for _ in range(n):
-        x = (a * x + c) % m
-        numeros.append(x / m)
-    return numeros
+        x ^= (x << 13) & 0xFFFFFFFF
+        x ^= (x >> 17)
+        x ^= (x << 5) & 0xFFFFFFFF
+        x = x & 0xFFFFFFFF  # Asegura que se mantenga en 32 bits
+        results.append(x / 0xFFFFFFFF)  # Normaliza a [0, 1]
 
-valores = generar_gcl(n)
+    return results"""
 
-# Histograma
-plt.hist(valores, bins=50, edgecolor='black')
-plt.title("Histograma GLC")
-plt.xlabel("Valor")
-plt.ylabel("Frecuencia")
-plt.grid(True)
-plt.show()
+def xorshift32(seed, n=10000):
+    """Bibliografia: https://www.maxgcoding.com/xorshiftpnrg"""
+    x = seed & 0xFFFFFFFF
+    results = []
+    for _ in range(n):
+        x ^= (x << 13) & 0xFFFFFFFF
+        x ^= (x >> 17)
+        x ^= (x << 5) & 0xFFFFFFFF
+        x = x & 0xFFFFFFFF
+        results.append(x / 0xFFFFFFFF)
+    return np.array(results)
 
+# Generar valores
+seed = 123456789
+n=100000
+numeros = xorshift32(seed, n)
 
 # Armar los pares (U_n, U_{n+1})
-pares = [(valores[i], valores[i+1]) for i in range(n - 1)]
+pares = [(numeros[i], numeros[i+1]) for i in range(n - 1)]
 x_vals, y_vals = zip(*pares)
-
-# Gráfico de dispersión
-plt.figure(figsize=(6, 6))
-plt.scatter(x_vals, y_vals, s=1, alpha=0.5)
-plt.title("Gráfico de dispersión: (U_n, U_{n+1}) - GCL")
-plt.xlabel("U_n")
-plt.ylabel("U_{n+1}")
-plt.grid(True)
-plt.show()
-
 
 # Calcular el coeficiente de correlación de Pearson
 corr, p_valor = pearsonr(x_vals, y_vals)
@@ -57,37 +49,38 @@ print(f"Valor p asociado: {p_valor:.6f}")
 
 
 # Armar las tríadas (U_n, U_{n+1}, U_{n+2})
-trios = [(valores[i], valores[i+1], valores[i+2]) for i in range(n - 2)]
+trios = [(numeros[i], numeros[i+1], numeros[i+2]) for i in range(n - 2)]
 x_vals, y_vals, z_vals = zip(*trios)
 
-# gráfico 3D
+# Histograma
+plt.hist(numeros, bins=50, edgecolor='black')
+plt.title("Histograma XORShift32")
+plt.xlabel("Valor")
+plt.ylabel("Frecuencia")
+plt.grid(True)
+plt.show()
+
+
+# Gráfico dispersión 2D
+plt.figure(figsize=(6, 6))
+plt.scatter(x_vals, y_vals, s=1, alpha=0.5)
+plt.title("Gráfico dispersión XORShift32")
+plt.xlabel("U_n")
+plt.ylabel("U_n+1")
+plt.grid(True)
+plt.show()
+
+# Gráfico 3D
 fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(x_vals, y_vals, z_vals, s=1, alpha=0.5)
 
-ax.set_title("Gráfico 3D: (U_n, U_{n+1}, U_{n+2}) - GCL")
+ax.set_title("Gráfico 3D: (U_n, U_{n+1}, U_{n+2}) - XORShift32")
 ax.set_xlabel("U_n")
 ax.set_ylabel("U_{n+1}")
 ax.set_zlabel("U_{n+2}")
 plt.tight_layout()
 plt.show()
-
-#test de chi cuadrado
-#cantidad de intervalos
-k = 10
-
-#Contamos ocurrencias en cada intervalo
-frecuencias_obs, _ = np.histogram(valores, bins=k, range=(0, 1))
-
-#Frecuencia esperada si fuera perfectamente uniforme
-frecuencia_esp = [n / k] * k
-
-#Comente esto para que me ande el chi^2 dentro del test de poker.
-"""# Test de chi-cuadrado
-chi2, p_valor = chisquare(frecuencias_obs, f_exp=frecuencia_esp)
-
-print(f"Chi-cuadrado (n=100.000): {chi2:.4f}")
-print(f"Valor p: {p_valor:.6f}")"""
 
 def test_chi_cuadrado(valores, k=10):
     """
@@ -154,9 +147,6 @@ def calculo_corridas(valores):
         print("❌ Rechazamos H0: NO aleatorio (α = 0.05)")
 
 
-
-
-
 # Test de series
 def contar_corridas(valores):
     r = 1  # siempre hay al menos una corrida
@@ -166,7 +156,7 @@ def contar_corridas(valores):
             r += 1
     return r
 
-r = contar_corridas(valores)
+r = contar_corridas(numeros)
 mu = (2 * n - 1) / 3
 sigma2 = (16 * n - 29) / 90
 z = (r - mu) / np.sqrt(sigma2)
@@ -234,8 +224,8 @@ def poker_test(numeros, nombre=""):
 
 
 
-poker_test(valores, "GLC")
+poker_test(numeros, "XORShift32")
 
-calculo_corridas(valores)
+calculo_corridas(numeros)
 
-test_chi_cuadrado(valores)
+test_chi_cuadrado(numeros)
