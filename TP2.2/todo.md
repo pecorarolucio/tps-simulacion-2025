@@ -21,4 +21,5 @@ Esta todo en el libro que pusieron en el classroom (formulas y diagramas para ha
 
 ## Informe
 - Desarrollo teorico (con formulas) de cada generador
-- Metodo de transformada inversa para los que aplica segun la tabla del informe
+- Metodo de transformada inversa para los que aplica segun la tabla del informe (uniforme, exponencial y normal)
+- Metodo del rechazo (esta en el libro pero realmente no lo entiendo)
