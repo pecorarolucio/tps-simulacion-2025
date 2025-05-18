@@ -1,11 +1,12 @@
 import random
-import matplotlib.pyplot as plt
-import scipy.stats
-from scipy.stats import chisquare, expon, norm, binom, poisson, chi2
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import chisquare, expon, norm, binom, poisson, chi2
+#Valor n
+n=10000
 
-def distr_uniforme(a, b, size=1):
+def distr_uniforme(a, b, size):
     """
     Distribucion uniforme
     a, b: rango de valores
@@ -15,13 +16,35 @@ def distr_uniforme(a, b, size=1):
         x.append(a+(b-a)*random.random())
     return x
 
-def distr_exp(ex, size=1):
+# Test: generar 10.000 números entre 5 y 15
+datos_uniforme = distr_uniforme(5, 15, n)
+
+# Graficar histograma
+plt.hist(datos_uniforme, bins=50, density=True, edgecolor='black')
+plt.title('Distribución Uniforme Continua U(5, 15)')
+plt.xlabel('Valor')
+plt.ylabel('Densidad')
+plt.grid(True)
+plt.show()
+
+def distr_exp(ex, size):
     x=[]
     for _ in range(size):
         x.append(-ex*math.log(random.random()))
     return x
 
-def distr_gamma(k, a, size=1):
+# Test: generar 10.000 números con lambda = 1.5
+"""datos_exponencial = distr_exp(1.5, n)
+
+# Graficar histograma
+plt.hist(datos_exponencial, bins=50, density=True, edgecolor='black')
+plt.title('Distribución Exponencial λ = 1.5')
+plt.xlabel('Valor')
+plt.ylabel('Densidad')
+plt.grid(True)
+plt.show()"""
+
+def distr_gamma(k, a, size):
     """
     Generador de valores con distribucion gamma basado en el libro
     k, a: parametros necesarios para distribucion gamma
@@ -34,7 +57,19 @@ def distr_gamma(k, a, size=1):
         x.append(-(math.log(tr)/a))
     return x
 
-def distr_normal(ex, stdx, size=1):
+# Test: generar 10.000 números con alpha = 3, beta = 2
+"""datos_gamma = distr_gamma(3, 2, n)
+
+# Graficar histograma
+plt.hist(datos_gamma, bins=50, density=True, edgecolor='black')
+plt.title('Distribución Gamma α = 3, β = 2')
+plt.xlabel('Valor')
+plt.ylabel('Densidad')
+plt.grid(True)
+plt.savefig('gamma.png')
+plt.show()"""
+
+def distr_normal(ex, stdx, size):
     x=[]
     for _ in range(size):
         sum=0
@@ -42,6 +77,19 @@ def distr_normal(ex, stdx, size=1):
             sum=sum+random.random()
         x.append(stdx*(sum-6)+ex)
     return x
+
+# Test: generar 10.000 números con media 0 y desviación 1
+"""datos_normal = distr_normal(0, 1, n)
+
+# Graficar histograma
+plt.hist(datos_normal, bins=50, density=True, edgecolor='black')
+plt.title('Distribución Normal N(0, 1)')
+plt.xlabel('Valor')
+plt.ylabel('Densidad')
+plt.grid(True)
+plt.savefig('normal.png')
+plt.show()"""
+
 
 def distr_pascal(k, q, size=1): #en el libro esta como binomial negativa, es un caso especial de esa
     nx=[]
@@ -53,7 +101,7 @@ def distr_pascal(k, q, size=1): #en el libro esta como binomial negativa, es un 
         nx.append(x)
     return nx
 
-def distr_binomial(n, p, size=1):
+def distr_binomial(n, p, size):
     x=[]
     for _ in range(size):
         y=0
@@ -62,6 +110,18 @@ def distr_binomial(n, p, size=1):
                 y+=1
         x.append(y)
     return x
+
+# Test: 10000 muestras con n = 10, p = 0.3
+"""datos_binomial = distr_binomial(10, 0.3, n)
+
+# Histograma
+plt.hist(datos_binomial, bins=range(0, 11), density=True, edgecolor='black', align='left')
+plt.title('Distribución Binomial n=10, p=0.3')
+plt.xlabel('Cantidad de éxitos')
+plt.ylabel('Probabilidad')
+plt.grid(True)
+plt.savefig('binomial.png')
+plt.show()"""
 
 def distr_hipergeometrica(tn, ns, p, size=1):
     x=[]
