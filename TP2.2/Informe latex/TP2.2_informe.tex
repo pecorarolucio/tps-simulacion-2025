@@ -142,7 +142,7 @@ def uniforme_rechazo(a,b):
         X = a + (b - a) * r1
         c = 1 / (b - a)
         r2 = random.uniform(0,1) 
-        if r2 <= c :
+        if r2 <= c:
             return X
     
 \end{lstlisting}
@@ -296,7 +296,7 @@ def normal_rechazo(mu, sigma):
         X = Z * sigma + mu 
         c = math.exp(-0.5*((X-mu)/sigma)**2)/(sigma*math.sqrt(2*math.pi))
         r = random.uniform(0,1)
-        if r <= c :
+        if r <= c:
             return X
 \end{lstlisting}
 Se puede observar que se ingresa como parámetro la media ex y la desviación estándar que es stdx.
