@@ -93,7 +93,7 @@ def distr_normal(ex, stdx, size):
     return x
 
 #Método del rechazo
-def normal_rechazo (mu, sigma):
+def normal_rechazo(mu, sigma):
     while True:
     #Genera dos valores aleatorios uniformes en el rango (0 , 1]
         r1 = random.uniform(0, 1)
