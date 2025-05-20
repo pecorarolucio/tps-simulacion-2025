@@ -109,6 +109,23 @@ def normal_rechazo(mu, sigma):
         if r <= c:
             return X
 
+def gamma_rechazo(alpha, beta):
+    while True:
+        d = alpha - 1/3
+        c = 1 / math.sqrt(9 * d)
+        while True:
+            x = random.gauss(0, 1)
+            v = (1 + c * x) ** 3
+            if v <= 0:
+                continue
+            u = random.random()
+            if u < 1 - 0.0331 * (x ** 4):
+                break
+            if math.log(u) < 0.5 * x ** 2 + d * (1 - v + math.log(v)):
+                break
+        return d * v / beta
+
+
 # Test: generar 10.000 números con media 0 y desviación 1
 """datos_normal = distr_normal(0, 1, n)
 
@@ -434,5 +451,32 @@ def inicio():
     test_chi2_exponencial(expo)
     
     graficar(uni, gam, expo, nor, poi, bino, empi2, pas, hipergeo)
+    
+    # MÉTODO DE RECHAZO - GENERACIÓN
+    normal_rech = [normal_rechazo(0, 1) for _ in range(10000)]
+    gamma_rech = [gamma_rechazo(2, 2) for _ in range(10000)]
+
+    # GRAFICAR RECHAZO
+    plt.figure()
+    plt.hist(normal_rech, bins=50, edgecolor='black', color='skyblue')
+    plt.title('Distribución Normal por Método de Rechazo')
+    plt.grid(True)
+    plt.savefig('TP2.2/Images/normal_rechazo.png')
+    plt.close()
+
+    plt.figure()
+    plt.hist(gamma_rech, bins=50, edgecolor='black', color='lightgreen')
+    plt.title('Distribución Gamma por Método de Rechazo')
+    plt.grid(True)
+    plt.savefig('TP2.2/Images/gamma_rechazo.png')
+    plt.show()
+
+    # TEST CHI2 RECHAZO
+    print("---- NORMAL por método de rechazo ----")
+    test_chi2_normal(normal_rech)
+
+    print("---- GAMMA por método de rechazo ----")
+    test_chi2_normal(gamma_rech)
+
 
 inicio()
