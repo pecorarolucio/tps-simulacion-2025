@@ -16,6 +16,20 @@ def distr_uniforme(a, b, size):
         x.append(a+(b-a)*random.random())
     return x
 
+#Método del rechazo
+def uniforme_rechazo(a,b):
+    while True:
+    # Genera un valor aleatorio en el rango [0 , 1]
+        r1 = random.uniform(0,1)
+        # Aplica la transformaci ´on para obtener X en el rango [a, b]
+        X = a + (b - a) * r1
+        # Calcula la constante de rechazo
+        c = 1 / (b - a)
+        r2 = random.uniform(0,1) # Genera otro valor aleatorio para comparar con el criterio de aceptación
+        # Comprueba el criterio de aceptación/ rechazo
+        if r2 <= c:
+            return X # Devuelve el valor aceptado
+
 """# Test: generar 10.000 números entre 5 y 15
 datos_uniforme = distr_uniforme(5, 15, n)
 
@@ -77,6 +91,23 @@ def distr_normal(ex, stdx, size):
             sum=sum+random.random()
         x.append(stdx*(sum-6)+ex)
     return x
+
+#Método del rechazo
+def normal_rechazo (mu, sigma):
+    while True:
+    #Genera dos valores aleatorios uniformes en el rango (0 , 1]
+        r1 = random.uniform(0, 1)
+        r2 = random.uniform(0, 1)
+        # Aplica la transformación de Box - Muller para obtener un valor aleatorio normalmente distribuido
+        Z = math.sqrt(-2 * math.log(r1)) * math.cos(2 * math.pi * r2)
+        X = Z * sigma + mu # Calcula el valor candidato
+        c = math.exp(-0.5 * ((X - mu) / sigma) **2) / (sigma * math.sqrt(2* math.pi))
+        # Calcula la constante de rechazo
+        # Genera un valor aleatorio uniforme en el rango (0 , 1]
+        r = random.uniform(0, 1)
+        # Comprueba el criterio de aceptación/ rechazo
+        if r <= c:
+            return X
 
 # Test: generar 10.000 números con media 0 y desviación 1
 """datos_normal = distr_normal(0, 1, n)
