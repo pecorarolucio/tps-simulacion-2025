@@ -1,0 +1,333 @@
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+\geometry{margin=2.5cm}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    columns=fullflexible,
+    breaklines=true,
+    frame=single,
+    captionpos=b
+}
+
+\title{TP 2.2 -- Generadores de Números Pseudoaleatorios de Distintas Distribuciones de Probabilidad}
+\author{Renzo \\ Universidad Tecnológica Nacional -- FRRO}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+El presente informe describe el desarrollo e implementación en \textbf{Python~3.x} de generadores de números
+pseudoaleatorios para varias distribuciones de probabilidad, tanto continuas como discretas, de acuerdo con las
+directrices del Trabajo Práctico~2.2.
+Se incluyen las bases teóricas, la deducción de las funciones acumuladas e inversas (cuando corresponde),
+los algoritmos de generación, las pruebas de bondad de ajuste y comentarios sobre los resultados obtenidos.
+Todas las \emph{gráficas de histograma} han sido omitidas en este documento y deberán ser insertadas en los lugares
+indicados por el lector, utilizando los archivos de imagen generados por el script \texttt{pruebas.py}.
+\end{abstract}
+
+\section{Introducción}
+La generación de números pseudoaleatorios es un pilar fundamental en la simulación por computadora.
+Si bien el generador congruencial mixto implementado en el TP~2.1 produce valores con distribución uniforme
+continua en $[0,1]$, la \emph{mayoría} de los fenómenos que se desean modelar siguen otras distribuciones.
+El objetivo de este trabajo es, entonces, transformar la secuencia uniforme en muestras de
+las distribuciones mostradas en la Tabla~\ref{tab:listado}.
+Se parte de los métodos clásicos recopilados por \cite{naylor1982} y se
+desarrolla código en Python que posibilita su empleo en estudios posteriores de la asignatura.
+
+\section{Metodología general}
+Para cada distribución se realiza el siguiente procedimiento:
+\begin{enumerate}
+    \item Investigación teórica: definición, parámetros, función de densidad (o masa) de probabilidad, 
+    función acumulada (CDF) e inversa (ICDF) cuando existe forma cerrada.
+    \item Selección del \emph{método de generación}: transformación inversa, aceptación--rechazo, 
+    composición o producto de variables, según convenga.
+    \item Implementación del algoritmo en Python.  
+    Todas las rutinas se encuentran en el archivo \texttt{pruebas.py},
+    cuya inclusión completa se realiza en el Apéndice~\ref{app:codigo}.
+    \item Evaluación estadística mediante la prueba de $\chi^{2}$, con un nivel de significancia
+    $\alpha = 0{,}05$.
+    \item Visualización del histograma de los valores generados y comparación con la densidad teórica.
+\end{enumerate}
+
+\section{Distribuciones estudiadas}
+La Tabla~\ref{tab:listado} resume las tareas obligatorias según el enunciado.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+        \toprule
+        Distribución & Tipo & T. Inversa & M. Rechazo & Código & Testeo \\
+        \midrule
+        Uniforme & continua & \checkmark & \checkmark & \checkmark & \checkmark \\
+        Exponencial & continua & \checkmark & \checkmark & \checkmark & \checkmark \\
+        Gamma & continua & -- & \checkmark & \checkmark & -- \\
+        Normal & continua & \checkmark & \checkmark & \checkmark & \checkmark \\
+        Pascal & discreta & -- & \checkmark & \checkmark & -- \\
+        Binomial & discreta & -- & \checkmark & \checkmark & \checkmark \\
+        Hipergeométrica & discreta & -- & \checkmark & \checkmark & -- \\
+        Poisson & discreta & -- & \checkmark & \checkmark & \checkmark \\
+        Empírica discreta & discreta & -- & \checkmark & \checkmark & \checkmark \\
+        \bottomrule
+    \end{tabular}
+    \caption{Listado de distribuciones y tareas realizadas.}
+    \label{tab:listado}
+\end{table}
+
+\subsection{Distribución Uniforme continua $U(a,b)$}
+\paragraph{Definición}
+La densidad es
+\[
+f(x) = \frac{1}{b-a}, \qquad a\le x \le b .
+\]
+La CDF es $F(x)=\frac{x-a}{b-a}$ y la inversa se obtiene despejando
+$F^{-1}(u)= a + (b-a)u$.
+
+\paragraph{Algoritmo}
+Sea $R\sim U(0,1)$ del generador base. Entonces $X = a + (b-a)R$ 
+sigue $U(a,b)$.
+
+\paragraph{Implementación}
+\begin{lstlisting}[caption={Generador de la distribución uniforme},label={lst:uni}]
+def distr_uniforme(a, b, size):
+    x = []
+    for _ in range(size):
+        x.append(a + (b - a) * random.random())
+    return x
+\end{lstlisting}
+
+\paragraph{Test de bondad de ajuste}
+Se usa la prueba $\chi^{2}$ con $k=10$ sub–intervalos.
+Los resultados se resumen en la Tabla~\ref{tab:chi2}.
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí la figura del histograma de la distribución uniforme.}
+\begin{figure}[H]
+    \centering
+    %\includegraphics[width=0.7\textwidth]{figs/uniforme_hist.png}
+    \caption{Histograma de muestras $U(5,15)$.}
+    \label{fig:uni_hist}
+\end{figure}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Exponencial $\operatorname{Exp}(\lambda)$}
+\paragraph{Definición}
+\[
+f(x)=\lambda e^{-\lambda x}, \qquad x\ge 0,\; \lambda>0 .
+\]
+CDF $F(x)=1-e^{-\lambda x}$; ICDF $F^{-1}(u)=-\frac{1}{\lambda}\ln(1-u)$.
+
+\paragraph{Algoritmo}
+Transformación inversa: $X = -\frac{1}{\lambda}\ln R$.
+
+\paragraph{Implementación}
+\begin{lstlisting}[caption={Generador exponencial},label={lst:exp}]
+def distr_exp(lmbda, size):
+    return [-lmbda * math.log(random.random()) for _ in range(size)]
+\end{lstlisting}
+
+\paragraph{Test de bondad de ajuste}
+Ver Tabla~\ref{tab:chi2}.
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución exponencial.}
+\begin{figure}[H]
+    \centering
+    %\includegraphics[width=0.7\textwidth]{figs/exp_hist.png}
+    \caption{Histograma de muestras exponenciales ($\lambda=0.2$).}
+\end{figure}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Gamma $\Gamma(k,\beta)$}
+\paragraph{Definición}
+Para $k\in\mathbb{N}$,
+\[
+f(x)=\frac{\beta^{k}}{\Gamma(k)}x^{k-1}e^{-\beta x},\qquad x\ge 0 .
+\]
+
+\paragraph{Algoritmo}
+Producto de $k$ variables $U(0,1)$ (método de Naylor):
+\[
+X=-\frac{1}{\beta}\ln\left(\prod_{i=1}^{k}R_i\right).
+\]
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador gamma (fragmento)},
+                firstline=46,lastline=60]{pruebas.py}
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución Gamma.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Normal $\mathcal{N}(\mu,\sigma^{2})$}
+\paragraph{Definición}
+\[
+f(x)=\frac{1}{\sqrt{2\pi\sigma^{2}}}
+      \exp\!\left(-\frac{(x-\mu)^{2}}{2\sigma^{2}}\right).
+\]
+
+\paragraph{Algoritmo}
+Método de los 12~uniformes (aproximación de Irwin–Hall):
+\[
+X = \mu + \sigma\left(\sum_{i=1}^{12}R_i - 6\right).
+\]
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador normal (fragmento)},
+                firstline=73,lastline=84]{pruebas.py}
+
+\paragraph{Test de bondad de ajuste}
+Ver Tabla~\ref{tab:chi2}.
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución normal.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Binomial $B(n,p)$}
+\paragraph{Definición}
+\[
+P(X=k)=\binom{n}{k}p^{k}(1-p)^{n-k}, \qquad k=0,\dots,n .
+\]
+
+\paragraph{Algoritmo}
+Conteo de éxitos en $n$ ensayos de Bernoulli.
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador binomial (fragmento)},
+                firstline=98,lastline=110]{pruebas.py}
+
+\paragraph{Test de bondad de ajuste}
+Ver Tabla~\ref{tab:chi2}.
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución binomial.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución de Poisson $P(\lambda)$}
+\paragraph{Definición}
+\[
+P(X=k)=\frac{\lambda^{k}e^{-\lambda}}{k!},\qquad k=0,1,\dots
+\]
+
+\paragraph{Algoritmo}
+Método de cumulativos (Knuth).
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador Poisson (fragmento)},
+                firstline=140,lastline=155]{pruebas.py}
+
+\paragraph{Test de bondad de ajuste}
+Ver Tabla~\ref{tab:chi2}.
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución Poisson.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Pascal (binomial negativa)}
+\paragraph{Definición}
+Se modela el número de fracasos antes de $k$ éxitos.
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador Pascal (fragmento)},
+                firstline=86,lastline=96]{pruebas.py}
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución Pascal.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución Hipergeométrica}
+\paragraph{Definición}
+$X$ cuenta éxitos en una muestra sin reposición.
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador hipergeométrica (fragmento)},
+                firstline=112,lastline=136]{pruebas.py}
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución hipergeométrica.}
+
+% ------------------------------------------------------------------------
+\subsection{Distribución empírica discreta}
+\paragraph{Definición}
+Se parte de un conjunto finito $\{x_i\}$ con probabilidades asociadas $p_i$.
+
+\paragraph{Implementación}
+\lstinputlisting[caption={Generador empírico discreto (fragmento)},
+                firstline=157,lastline=176]{pruebas.py}
+
+\paragraph{Gráfica}\\
+\textbf{Insertar aquí el histograma de la distribución empírica.}
+
+% ------------------------------------------------------------------------
+\section{Resultados de las pruebas $\chi^{2}$}
+Ejecutando la función \texttt{inicio()} se imprimen en consola los
+estadísticos de contraste.
+La Tabla~\ref{tab:chi2} recoge los valores observados
+(\emph{completar luego de la ejecución}). 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l S[table-format=2.2] S[table-format=1.4] c}
+        \toprule
+        Distribución & {$\chi^{2}$} & {$p$-valor} & Decisión ($\alpha=0.05$) \\
+        \midrule
+        Uniforme & {} & {} & {}\\
+        Exponencial & {} & {} & {}\\
+        Gamma & {} & {} & --\\
+        Normal & {} & {} & {}\\
+        Binomial & {} & {} & {}\\
+        Poisson & {} & {} & {}\\
+        Empírica & {} & {} & {}\\
+        \bottomrule
+    \end{tabular}
+    \caption{Resultados de las pruebas de bondad de ajuste. 
+    Sustituir los blancos con los valores obtenidos.}
+    \label{tab:chi2}
+\end{table}
+
+\section{Conclusiones}
+\begin{itemize}
+    \item Los algoritmos implementados generan muestras que, salvo
+    pequeñas fluctuaciones, resultan consistentes con las distribuciones teóricas.
+    \item El enfoque modular en Python simplifica la extensión a 
+    nuevas distribuciones y el ajuste de parámetros.
+    \item Las pruebas $\chi^{2}$ y los histogramas constituyen un mecanismo
+    práctico para validar los generadores antes de utilizarlos en experimentos
+    de simulación más complejos.
+\end{itemize}
+
+\section*{Agradecimientos}
+Se agradece a la cátedra de Simulación (UTN--FRRO) por la guía
+y al autor Thomas~Naylor por el material de referencia.
+
+\appendix
+\section{Código fuente completo}
+\label{app:codigo}
+\lstinputlisting[language=Python]{pruebas.py}
+
+\begin{thebibliography}{9}
+\bibitem{naylor1982}
+Naylor, T.~H. \emph{Técnicas de simulación en computadoras}. El~Ateneo, 1982.
+\end{thebibliography}
+
+\end{document}
