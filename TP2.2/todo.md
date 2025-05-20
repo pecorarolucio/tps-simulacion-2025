@@ -16,8 +16,8 @@ Tengo entendido que no podemos utilizar los generadores directos, sino mediante 
 Esta todo en el libro que pusieron en el classroom (formulas y diagramas para hacer el codigo)
 
 ## Pruebas
-- Realizar una prueba a eleccion (diria chi cuadrado, pero vemos) de cada generador
-- Realizar histograma o grafico de frecuencia de valores
+- ~~Realizar una prueba a eleccion (diria chi cuadrado, pero vemos) de cada generador~~
+- ~~Realizar histograma o grafico de frecuencia de valores~~
 
 ## Informe
 - Desarrollo teorico (con formulas) de cada generador
