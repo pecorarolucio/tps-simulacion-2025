@@ -135,6 +135,16 @@ def distr_uniforme(a, b, size):
     for _ in range(size):
         x.append(a+(b-a)*random.random())
     return x
+
+def uniforme_rechazo(a,b):
+    while True:
+        r1 = random.uniform(0,1)
+        X = a + (b - a) * r1
+        c = 1 / (b - a)
+        r2 = random.uniform(0,1) 
+        if r2 <= c:
+            return X
+    
 \end{lstlisting}
 Se ingresa como parámetro a y b que son valores que expresan los límites de las distribuciones uniformes.
 
@@ -277,6 +287,17 @@ def distr_normal(ex, stdx, size):
             sum=sum+random.random()
         x.append(stdx*(sum-6)+ex)
     return x
+
+def normal_rechazo(mu, sigma):
+    while True:
+        r1 = random.uniform(0,1)
+        r2 = random.uniform(0,1)
+        Z = math.sqrt(-2*math.log(r1))* math.cos(2*math.pi*r2)
+        X = Z * sigma + mu 
+        c = math.exp(-0.5*((X-mu)/sigma)**2)/(sigma*math.sqrt(2*math.pi))
+        r = random.uniform(0,1)
+        if r <= c:
+            return X
 \end{lstlisting}
 Se puede observar que se ingresa como parámetro la media ex y la desviación estándar que es stdx.
 
@@ -321,6 +342,7 @@ Sea $X_k$ una variable aleatoria de Pascal de orden k:
     VX = \frac{kq}{p^2}
   \end{equation}
 
+\noindent\textbf{Gráfico\newline}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{histograma_pascal.png}
 \captionof{figure}{Histograma para la distribución pascal.}
@@ -345,6 +367,12 @@ La esperanza y la variancia se definen de la siguiente manera:
 \mathbb{E}[X] = np, \quad \text{Var}(X) = np(1 - p)
 \]
 
+\noindent\textbf{Gráfico\newline}
+\begin{center}
+\includegraphics[width=0.7\textwidth]{histograma_binomial.png}
+\captionof{figure}{Histograma para la distribución binomial.}
+\end{center}
+
 \subsubsection{Distribución Hipergeométrica}
 Modela la cantidad de éxitos al extraer una muestra sin reemplazo de tamaño n desde una población de tamaño N, que contiene K elementos exitosos.
 
@@ -362,10 +390,6 @@ La función de probabilidad de una variable aleatoria con distribución hipergeo
     \end{equation}
   La generación de valores hipergeométricos involucra, substancialmente, la simulación de experimentos de muestreo sin reemplazo.
 
-\begin{center}
-\includegraphics[width=0.7\textwidth]{histograma_binomial.png}
-\captionof{figure}{Histograma para la distribución binomial.}
-\end{center}
 
 \subsubsection{Distribución Poisson}
 Modela la cantidad de eventos que ocurren en un intervalo de tiempo o espacio bajo una tasa de ocurrencia constante \( \lambda \).
@@ -376,6 +400,7 @@ Modela la cantidad de eventos que ocurren en un intervalo de tiempo o espacio ba
     \end{equation}
 Esto sucede siempre y cuando permitamos que p se aproxime a cero de manera que se satisfaga la relación \(\ \lambda = np. \)\
 
+\noindent\textbf{Gráfico\newline}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{histograma_poisson.png}
 \captionof{figure}{Histograma para la distribución Poisson obtenida.}
@@ -420,7 +445,7 @@ Se utilizó para la generacion de valores en esta distribución, las siguientes 
 \label{tab:empirica}
 \end{table}
 
-
+\noindent\textbf{Gráfico\newline}
 \begin{center}
 \includegraphics[width=0.7\textwidth]{histograma_empirica.png}
 \captionof{figure}{Histograma para la distribución empirica discreta obtenida.}
