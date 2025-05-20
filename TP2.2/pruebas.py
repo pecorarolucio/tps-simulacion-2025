@@ -16,7 +16,7 @@ def distr_uniforme(a, b, size):
         x.append(a+(b-a)*random.random())
     return x
 
-# Test: generar 10.000 números entre 5 y 15
+"""# Test: generar 10.000 números entre 5 y 15
 datos_uniforme = distr_uniforme(5, 15, n)
 
 # Graficar histograma
@@ -25,7 +25,7 @@ plt.title('Distribución Uniforme Continua U(5, 15)')
 plt.xlabel('Valor')
 plt.ylabel('Densidad')
 plt.grid(True)
-plt.show()
+plt.show() """
 
 def distr_exp(ex, size):
     x=[]
@@ -325,74 +325,75 @@ def test_chi2_normal(valores, num_intervalos=10, alpha=0.05):
 def graficar(u, g, e, n, p, b, em, pas, hipergeo):
     plt.figure(1)
     plt.title("Distribución Uniforme")
-    plt.hist(u, edgecolor='black')
+    plt.hist(u, bins=50, edgecolor='black')
     plt.grid(True)
 
     plt.show()
 
     plt.figure(2)
     plt.title("Distribución Gamma")
-    plt.hist(g, edgecolor='black')
+    plt.hist(g, bins= 50, edgecolor='black')
     plt.grid(True)
 
     plt.show()
 
     plt.figure(3)
     plt.title("Distribución Exponencial")
-    plt.hist(e, 25, edgecolor='black')
+    plt.hist(e, bins= 50, edgecolor='black')
     plt.grid(True)
 
     plt.show()
 
     plt.figure(4)
     plt.title("Distribución Normal")
-    plt.hist(n, 25, edgecolor='black')
+    plt.hist(n, bins= 50, edgecolor='black')
     plt.grid(True)
     plt.show()
 
     plt.figure(5)
     plt.title("Distribución Poisson")
-    plt.hist(p, 25, edgecolor='black')
+    plt.hist(p, bins= 50, edgecolor='black')
     plt.grid(True)
     plt.show()
 
     plt.figure(6)
     plt.title("Distribución Binomial")
-    plt.hist(b, 25, edgecolor='black')
+    plt.hist(b, bins= 50, edgecolor='black')
     plt.grid(True)
     plt.show()
 
     plt.figure(7)
     plt.title("Distribución Empirica")
-    plt.hist(em, edgecolor='black')
+    plt.hist(em, bins= 50, edgecolor='black')
     plt.grid(True)
     plt.show()
 
     plt.figure(8)
     plt.title("Distribución Pascal")
-    plt.hist(pas, edgecolor='black')
+    plt.hist(pas, bins= 50, edgecolor='black')
     plt.grid(True)
     plt.show()
 
     plt.figure(9)
     plt.title("Distribución Hipergeometrica")
-    plt.hist(hipergeo, edgecolor='black')
+    plt.hist(hipergeo, bins= 50, edgecolor='black')
     plt.grid(True)
 
     plt.show()
 
 def inicio():
+    size=5000
     p = [0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062, 0.151, 0.047, 0.044] #tabla del libro
-    uni = (distr_uniforme(0, 5, 1000))
-    gam = (distr_gamma(5, 20, 1000))
-    expo = (distr_exp(5, 1000))
-    nor = distr_normal(2.35, 30, 1000)
-    poi = distr_poisson(50, 1000)
-    bino = distr_binomial(10, 0.4, 1000)
+    uni = (distr_uniforme(0, 5, size))
+    gam = (distr_gamma(5, 20, size))
+    expo = (distr_exp(5, size))
+    nor = distr_normal(2.35, 30, size)
+    poi = distr_poisson(50, size)
+    bino = distr_binomial(10, 0.4, size)
     #empi = distr_empiricadiscr(p, 1000)
-    pas = distr_pascal(5, 0.4, 1000)
-    hipergeo = distr_hipergeometrica(5000000, 500, 0.4, 1000)
-    empi2 = distr_empiricadiscr_corregida(p, 1000)
+    pas = distr_pascal(5, 0.4, size)
+    hipergeo = distr_hipergeometrica(5000000, 500, 0.4, size)
+    empi2 = distr_empiricadiscr_corregida(p, size)
 
     test_chi2_normal(nor)
     test_chi2_empirica_discreta(empi2, p)
