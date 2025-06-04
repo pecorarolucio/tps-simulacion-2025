@@ -11,7 +11,7 @@ a = "f" #El tipo de capital: i (infinito), f (finito).
 YYY=100
 XXX=100
 
-cfi = 100  #Cafital finito inicial
+cfi = 100  #Capital finito inicial
 ci = "Auto" #Color inicial "R" (Rojo), "V" (Verde), "N" (Negro), "Auto" (Automatico)
 """
 
