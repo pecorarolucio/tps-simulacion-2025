@@ -1,6 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+#Explicación
+"""
+Se simula demanda como un proceso Poisson discreto en tiempo.
+El inventario se revisa cada review_period unidades de tiempo y se hace un pedido fijo.
+Los pedidos llegan después de un lead_time.
+Se acumulan costos de orden, mantenimiento (holding) y faltantes (shortage).
+Se hacen múltiples corridas para obtener promedios.
+Se grafica el nivel de inventario de la última corrida para análisis visual.
+"""
+
 class InventorySimulation:
     def __init__(self, demand_rate, lead_time, order_cost, holding_cost, shortage_cost,
                  review_period, order_quantity, initial_inventory=100, max_time=1000):
