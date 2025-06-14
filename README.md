@@ -9,3 +9,6 @@ https://www.overleaf.com/6375128419hshqqjcddhky#3007f9
 
 ## Enlace Informe TP2.1
 https://www.overleaf.com/8594581328wybstgnqdjrk#2e978c
+
+## Enlace Informe TP2.2
+https://es.overleaf.com/read/brtcyyskqscd#654d75
