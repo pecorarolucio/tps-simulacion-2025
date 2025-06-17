@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+import pandas as pd
 
 class MM1Simulator:
     def __init__(self, lambda_rate, mu_rate, max_time, queue_size=float('inf'), target_n=3):
@@ -179,6 +180,32 @@ def run_mm1_experiments(mu_rate, max_time, num_runs, queue_sizes, lambda_percent
     
     return results
 
+def save_results_to_csv(results, filename="mm1_results.csv"):
+    rows = []
+    for (queue_size, lambda_percentage), measures in results.items():
+        row = {
+            "queue_size": queue_size,
+            "lambda_percentage": lambda_percentage,
+            **measures
+        }
+        rows.append(row)
+    df = pd.DataFrame(rows)
+    df.to_csv(filename, index=False)
+
+def plot_metric_vs_lambda(results, metric_name, queue_size):
+    x = []
+    y = []
+    for (q_size, lam_pct), measures in results.items():
+        if q_size == queue_size:
+            x.append(lam_pct)
+            y.append(measures[metric_name])
+    plt.plot(x, y, marker='o')
+    plt.title(f"{metric_name} vs Lambda % (Queue Size {queue_size})")
+    plt.xlabel("Lambda / Mu")
+    plt.ylabel(metric_name)
+    plt.grid(True)
+    plt.show()
+
 #Ejecución de todos los datos que pide
 """# Parámetros de simulación
 mu_rate = 1.0  # Tasa de servicio base
@@ -196,7 +223,7 @@ lambda_percentages = [0.25, 0.50, 0.75, 1.00, 1.25]  # Porcentajes de tasa de ll
 
 # Ejecutar experimentos
 results = run_mm1_experiments(mu_rate, max_time, num_runs, queue_sizes, lambda_percentages)
-
+save_results_to_csv(results, "mm1_results.csv")
 # Imprimir resultados
 for (queue_size, lambda_percentage), measures in results.items():
     print(f"Queue Size: {queue_size}, Lambda: {lambda_percentage * 100}% of Mu")
@@ -211,11 +238,33 @@ sim.plot_queue_length()
 sim_measures = sim.get_performance_measures()
 theory_measures = sim.get_theoretical_measures()
 
-#Comparacion medidas simuladas vs teóricas
-print("Medidas Simuladas:")
-for key, val in sim_measures.items():
-    print(f"  {key}: {val:.4f}")
 
-print("\nMedidas Teóricas:")
-for key, val in theory_measures.items():
-    print(f"  {key}: {val:.4f}")
+if __name__ == "__main__":
+    # Parámetros generales
+    mu_rate = 1.0
+    max_time = 10000
+    num_runs = 10
+    queue_sizes = [float('inf'), 0, 2, 5, 10, 50]
+    lambda_percentages = [0.25, 0.50, 0.75, 1.00, 1.25]
+
+    # Simulación completa
+    results = run_mm1_experiments(mu_rate, max_time, num_runs, queue_sizes, lambda_percentages)
+    save_results_to_csv(results)
+
+    # Simulación individual
+    sim = MM1Simulator(lambda_rate=0.75, mu_rate=1.0, max_time=10000, queue_size=10, target_n=3)
+    sim.run()
+    sim.plot_queue_length()
+
+    # Comparación Sim vs Teoría
+    sim_measures = sim.get_performance_measures()
+    theory_measures = sim.get_theoretical_measures()
+    print("\nMedidas Simuladas:")
+    for key, val in sim_measures.items():
+        print(f"  {key}: {val:.4f}")
+    print("\nMedidas Teóricas:")
+    for key, val in theory_measures.items():
+        print(f"  {key}: {val:.4f}")
+
+    # Gráfico ejemplo
+    plot_metric_vs_lambda(results, "avg_time_queue", queue_size=10)
