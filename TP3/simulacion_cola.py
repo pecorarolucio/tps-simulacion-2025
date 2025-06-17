@@ -206,6 +206,47 @@ def plot_metric_vs_lambda(results, metric_name, queue_size):
     plt.grid(True)
     plt.show()
 
+def plot_comparative_theoretical_vs_simulated(sim_measures, theory_measures):
+    labels = ['L', 'Lq', 'W', 'Wq']
+    sim_values = [
+        sim_measures['avg_customers_system'],
+        sim_measures['avg_customers_queue'],
+        sim_measures['avg_time_system'],
+        sim_measures['avg_time_queue'],
+    ]
+    theo_values = [
+        theory_measures['L'],
+        theory_measures['Lq'],
+        theory_measures['W'],
+        theory_measures['Wq'],
+    ]
+
+    x = np.arange(len(labels))
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars1 = ax.bar(x - width/2, sim_values, width, label='Simulado', color='#1f77b4')
+    bars2 = ax.bar(x + width/2, theo_values, width, label='Teórico', color='#ff7f0e')
+
+    for bars in [bars1, bars2]:
+        for bar in bars:
+            height = bar.get_height()
+            ax.annotate(f'{height:.2f}',
+                        xy=(bar.get_x() + bar.get_width() / 2, height),
+                        xytext=(0, 3),
+                        textcoords="offset points",
+                        ha='center', va='bottom',
+                        fontsize=8)
+
+    ax.set_title('Comparación teórica vs simulada (M/M/1)')
+    ax.set_ylabel('Valor')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
 #Ejecución de todos los datos que pide
 """# Parámetros de simulación
 mu_rate = 1.0  # Tasa de servicio base
@@ -268,3 +309,4 @@ if __name__ == "__main__":
 
     # Gráfico ejemplo
     plot_metric_vs_lambda(results, "avg_time_queue", queue_size=10)
+    plot_comparative_theoretical_vs_simulated(sim_measures, theory_measures)
