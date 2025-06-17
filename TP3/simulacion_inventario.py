@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class InventorySimulation:
     def __init__(self, demand_rate, lead_time, order_cost, holding_cost, shortage_cost,
@@ -174,6 +175,51 @@ def run_inventory_experiments(runs=10):
     # Gráficos de la última corrida
     sim.plot_inventory()
     sim.plot_costs()
+
+    save_inventory_results(results)
+    plot_cost_comparison(avg_costs, theoretical)
+
+
+def save_inventory_results(results, filename="inventory_results.csv"):
+    df = pd.DataFrame(results)
+    df.to_csv(filename, index=False)
+
+def plot_cost_comparison(avg_costs, theoretical):
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    labels = ['Orden', 'Mantenimiento', 'Faltantes', 'Total']
+    sim_values = [avg_costs[k] for k in avg_costs.keys()]
+    theo_values = [theoretical[k] for k in theoretical.keys()]
+
+    x = np.arange(len(labels))
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    bars1 = ax.bar(x - width/2, sim_values, width, label='Simulado', color='#1f77b4')
+    bars2 = ax.bar(x + width/2, theo_values, width, label='Teórico', color='#ff7f0e')
+
+    for bars in [bars1, bars2]:
+        for bar in bars:
+            height = bar.get_height()
+            ax.annotate(f'{height:.1f}',
+                        xy=(bar.get_x() + bar.get_width() / 2, height),
+                        xytext=(0, 3),
+                        textcoords="offset points",
+                        ha='center', va='bottom',
+                        fontsize=8)
+
+    ax.set_ylabel('Costo ($)')
+    ax.set_title('Comparación de costos promedio vs teóricos')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend()
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
+
 
 if __name__ == "__main__":
     run_inventory_experiments()
